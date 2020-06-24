@@ -1,5 +1,6 @@
 package com.study.springboot.redis.app.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,8 +23,27 @@ public class UserService {
     @Autowired
     private RedisServiceClient redisServiceClient;
     
+
     public List<User> getAll() {
+        List<User> list = getAllRedis();
+        if (list.isEmpty()) list = getAllDB();
+        return list;
+    }
+
+    private List<User> getAllDB() {
+        System.out.println("Get all on DB");
         return (List<User>) userRepository.findAll();
+    }
+
+    private List<User> getAllRedis() {
+        List<String> listKeys = redisServiceClient.getAll();
+        List<User> listUsers = new ArrayList<User>();
+        listKeys.forEach(key -> {
+            User u = getByIdRedis(Long.parseLong(key));
+            listUsers.add(u);
+        });
+        System.out.println("Get all on Redis");
+        return listUsers;
     }
 
     public User getById(Long id) {

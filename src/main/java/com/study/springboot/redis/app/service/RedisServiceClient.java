@@ -1,5 +1,7 @@
 package com.study.springboot.redis.app.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,14 +15,14 @@ public class RedisServiceClient {
     private RedisResourceBulider redisResourceBulider;
     
     public String getValue(String key) {
-		String retorno = null;
+		String ret = null;
 		try {
 			RedisCommands<String, String> connectionSync = this.redisResourceBulider.connectionSync();
-			retorno = connectionSync.get(key);
+			ret = connectionSync.get(key);
 		} catch (Exception e) {
 			System.out.println("Error on getValue("+ key + ") - " + e.getMessage());
 		}
-		return retorno;
+		return ret;
 	}
 
 	public void add(String key, String value, Integer time) {
@@ -30,5 +32,16 @@ public class RedisServiceClient {
 		} catch (Exception e) {
 			System.out.println("Error on add("+ key + ", " + value + ", " + time + ") - " + e.getMessage());
 		}	
+	}
+
+	public List<String> getAll(){
+		List<String> list = null;
+		try {
+			RedisCommands<String, String> connectionSync = this.redisResourceBulider.connectionSync();
+			list = connectionSync.keys("*");
+		} catch (Exception e) {
+			System.out.println("Error on getAll() - " + e.getMessage());
+		}
+		return list;
 	}
 }
