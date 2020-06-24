@@ -3,7 +3,7 @@ package com.study.springboot.redis.app;
 import java.util.stream.Stream;
 
 import com.study.springboot.redis.app.entity.User;
-import com.study.springboot.redis.app.repository.UserRepository;
+import com.study.springboot.redis.app.service.UserService;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -18,13 +18,13 @@ public class AppApplication {
 	}
 
 	@Bean
-    CommandLineRunner init(UserRepository userRepository) {
+    CommandLineRunner init(UserService userService) {
         return args -> {
             Stream.of("John", "Julie", "Jennifer", "Helen", "Rachel").forEach(name -> {
                 User user = new User(name, name.toLowerCase() + "@domain.com");
-                userRepository.save(user);
+                userService.add(user);
             });
-            userRepository.findAll().forEach(System.out::println);
+            userService.getAll().forEach(System.out::println);
         };
     }
 }

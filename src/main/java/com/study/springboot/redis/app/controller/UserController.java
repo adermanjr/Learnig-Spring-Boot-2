@@ -1,10 +1,9 @@
 package com.study.springboot.redis.app.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.study.springboot.redis.app.entity.User;
-import com.study.springboot.redis.app.repository.UserRepository;
+import com.study.springboot.redis.app.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,22 +19,22 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @GetMapping("/users")
     public List<User> getUsers() {
-        return (List<User>) userRepository.findAll();
+        return (List<User>) userService.getAll();
     }
 
     @GetMapping("/users/{id}")
-    public @ResponseBody ResponseEntity<Optional<User>> getUser(@PathVariable String id) {
-        Optional<User> u = userRepository.findById(Long.parseLong(id));
+    public @ResponseBody ResponseEntity<User> getUser(@PathVariable Long id) {
+        User u = userService.getById(id);
         return ResponseEntity.accepted().body(u);
     }
  
     @PostMapping("/users")
     void addUser(@RequestBody User user) {
-        userRepository.save(user);
+        userService.add(user);
         System.out.println("Added user " + user);
     }
 

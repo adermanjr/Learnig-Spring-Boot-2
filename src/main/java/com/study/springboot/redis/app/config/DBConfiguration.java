@@ -27,7 +27,11 @@ public class DBConfiguration {
         System.out.println(username);
         System.out.println(password);
         return "DB Connection instance DEV";
-
     }
 
+    // @Bean
+    // public LettuceConnectionFactory redisConnectionFactory() {
+  
+    //   return new LettuceConnectionFactory(new RedisStandaloneConfiguration("server", 6379));
+    // }
 }
