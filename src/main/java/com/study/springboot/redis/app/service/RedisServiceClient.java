@@ -34,7 +34,7 @@ public class RedisServiceClient {
 		}	
 	}
 
-	public List<String> getAll(){
+	public List<String> getAllKeys(){
 		List<String> list = null;
 		try {
 			RedisCommands<String, String> connectionSync = this.redisResourceBulider.connectionSync();

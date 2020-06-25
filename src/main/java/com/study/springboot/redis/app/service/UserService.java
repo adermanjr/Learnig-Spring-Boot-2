@@ -37,7 +37,7 @@ public class UserService {
     }
 
     private List<User> getAllRedis() {
-        List<String> listKeys = redisServiceClient.getAll();
+        List<String> listKeys = redisServiceClient.getAllKeys();
         List<User> listUsers = new ArrayList<User>();
         listKeys.stream().sorted().forEach(key -> {
             User u = getByIdRedis(Long.parseLong(key));
