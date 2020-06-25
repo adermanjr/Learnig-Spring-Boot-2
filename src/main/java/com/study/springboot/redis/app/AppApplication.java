@@ -1,8 +1,5 @@
 package com.study.springboot.redis.app;
 
-import java.util.stream.Stream;
-
-import com.study.springboot.redis.app.entity.User;
 import com.study.springboot.redis.app.service.UserService;
 
 import org.springframework.boot.CommandLineRunner;
@@ -20,11 +17,7 @@ public class AppApplication {
 	@Bean
     CommandLineRunner init(UserService userService) {
         return args -> {
-            Stream.of("John", "Julie", "Jennifer", "Helen", "Rachel").forEach(name -> {
-                User user = new User(name, name.toLowerCase() + "@domain.com");
-                userService.add(user);
-            });
-            userService.getAll().forEach(System.out::println);
+            userService.fillDB();
         };
     }
 }

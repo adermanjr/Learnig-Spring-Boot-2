@@ -3,6 +3,7 @@ package com.study.springboot.redis.app.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -38,7 +39,7 @@ public class UserService {
     private List<User> getAllRedis() {
         List<String> listKeys = redisServiceClient.getAll();
         List<User> listUsers = new ArrayList<User>();
-        listKeys.forEach(key -> {
+        listKeys.stream().sorted().forEach(key -> {
             User u = getByIdRedis(Long.parseLong(key));
             listUsers.add(u);
         });
@@ -86,4 +87,23 @@ public class UserService {
     protected Gson getGson() {
 		return new GsonBuilder().create();
 	}
+
+	public void fillDB() {
+        List<User> listUsers = getAllRedis();
+        if (listUsers.isEmpty()) {
+            this.baseStart();
+        }
+        else {
+            listUsers.forEach( user -> {
+                this.addBD(user);
+            });
+        }
+    }
+    
+    private void baseStart() {
+        Stream.of("John", "Julie", "Jennifer", "Helen", "Rachel").forEach(name -> {
+            User user = new User(name, name.toLowerCase() + "@domain.com");
+            this.add(user);
+        });
+    }
 }
