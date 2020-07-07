@@ -40,31 +40,31 @@ public class UserService {
         List<String> listKeys = redisServiceClient.getAllKeys();
         List<User> listUsers = new ArrayList<User>();
         listKeys.stream().sorted().forEach(key -> {
-            User u = getByIdRedis(Long.parseLong(key));
-            listUsers.add(u);
+            Optional<User> u = getByIdRedis(Long.parseLong(key));
+            listUsers.add(u.get());
         });
         System.out.println("Get all on Redis");
         return listUsers;
     }
 
-    public User getById(Long id) {
-        User u = getByIdRedis(id);
-        if (u == null) {
-            u = getByIdBD(id);
+    public Optional<User> getById(Long id) {
+        Optional<User> optUser = getByIdRedis(id);
+        if (!optUser.isPresent()) {
+            optUser = getByIdBD(id);
         }
-        return u;
+        return optUser;
     }
 
-    private User getByIdRedis(Long id){
-        String u = redisServiceClient.getValue(id.toString());
+    private Optional<User> getByIdRedis(Long id){
         System.out.println("Get on Redis -> " + id);
-        return getGson().fromJson(u, User.class);
+        String u = redisServiceClient.getValue(id.toString());
+        User user = getGson().fromJson(u, User.class);
+        return Optional.ofNullable(user);
     }
 
-    private User getByIdBD(Long id){
-        Optional<User> u = userRepository.findById(id);
+    private Optional<User> getByIdBD(Long id){
         System.out.println("Get on BD -> " + id);
-        return (u.isPresent() ? u.get() : null); 
+        return userRepository.findById(id);
     }
 
     public void add(User user) {

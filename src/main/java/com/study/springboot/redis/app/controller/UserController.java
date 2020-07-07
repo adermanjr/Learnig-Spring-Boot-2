@@ -1,6 +1,7 @@
 package com.study.springboot.redis.app.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.study.springboot.redis.app.entity.User;
 import com.study.springboot.redis.app.service.UserService;
@@ -28,8 +29,14 @@ public class UserController {
 
     @GetMapping("/users/{id}")
     public @ResponseBody ResponseEntity<User> getUser(@PathVariable Long id) {
-        User u = userService.getById(id);
-        return ResponseEntity.accepted().body(u);
+        Optional<User> u = userService.getById(id);
+        if (u.isPresent()) {
+            return ResponseEntity.accepted().body(u.get());
+        }
+        else {
+            return ResponseEntity.notFound().build();
+        }
+            
     }
  
     @PostMapping("/users")
