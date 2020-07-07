@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -39,6 +40,7 @@ public class UserController {
     }
  
     @PostMapping("/users")
+    @ResponseStatus(HttpStatus.CREATED)
     void addUser(@RequestBody User user) {
         userService.add(user);
         System.out.println("Added user " + user);
