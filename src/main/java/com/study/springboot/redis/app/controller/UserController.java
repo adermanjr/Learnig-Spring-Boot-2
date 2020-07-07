@@ -31,7 +31,7 @@ public class UserController {
     public @ResponseBody ResponseEntity<User> getUser(@PathVariable Long id) {
         Optional<User> u = userService.getById(id);
         if (u.isPresent()) {
-            return ResponseEntity.accepted().body(u.get());
+            return ResponseEntity.ok(u.get());
         }
         else {
             return ResponseEntity.notFound().build();
